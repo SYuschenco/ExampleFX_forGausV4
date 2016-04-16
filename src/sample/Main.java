@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main extends Application {
-
+    static Scene mainScene;
     @Override
     public void start(Stage primaryStage) throws Exception{
 
@@ -25,10 +25,12 @@ public class Main extends Application {
         Parent fxmlMain = fxmlLoader.load();
         Controller mainController = fxmlLoader.getController();
         mainController.setMainStage(primaryStage);
+        mainScene = new Scene(fxmlMain, 900, 900);
         primaryStage.setTitle("Application for solving a system of linear equations by Gauss");
         primaryStage.setMinHeight(900);
         primaryStage.setMinWidth(900);
-        primaryStage.setScene(new Scene(fxmlMain, 900, 900));
+        primaryStage.setScene(mainScene);
+
         //init2(primaryStage);
         primaryStage.show();
     }

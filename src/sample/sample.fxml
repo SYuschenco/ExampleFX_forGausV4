@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
@@ -26,7 +27,7 @@
         <tabs>
           <Tab text="InputMethod">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <AnchorPane fx:id="inputMatrix" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <ImageView fitHeight="97.0" fitWidth="800.0" layoutX="7.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -43,19 +44,18 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="inputtingInDialogSystemSizeFieldInInputMethod" layoutX="401.0" layoutY="265.0" onAction="#inputtingInDialogSystemSizeFieldInInputMethod" prefHeight="30.0" prefWidth="61.0">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </TextField>
+                        <TextField fx:id="inputtingInDialogSystemSizeFieldInInputMethod" layoutX="401.0" layoutY="265.0" prefHeight="30.0" prefWidth="61.0" />
                         <ImageView fitHeight="150.0" fitWidth="785.0" layoutX="93.0" layoutY="106.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@LAE.jpg" />
                            </image>
                         </ImageView>
-                        <AnchorPane fx:id="matrixPaneInInputMethod" layoutX="32.0" layoutY="304.0" prefHeight="443.0" prefWidth="739.0" AnchorPane.bottomAnchor="14.0" AnchorPane.topAnchor="304.0" />
-                        <Button fx:id="btnRunWithInputtingCoefficients" layoutX="476.0" layoutY="264.0" mnemonicParsing="false" onAction="#btnActionRunWithInputtingCoefficients" prefHeight="31.0" prefWidth="225.0" text="Run with inputting coefficients" />
-                        <Button fx:id="btn2" layoutX="711.0" layoutY="265.0" mnemonicParsing="false" onAction="#btn2Act" text="Button" />
+                        <AnchorPane fx:id="matrixPaneInInputMethod" layoutX="9.0" layoutY="344.0" prefHeight="372.0" prefWidth="782.0" AnchorPane.bottomAnchor="45.0" AnchorPane.topAnchor="344.0" />
+                        <Button fx:id="btnRunWithInputtingCoefficients" cancelButton="true" defaultButton="true" layoutX="476.0" layoutY="264.0" mnemonicParsing="false" onAction="#btnActionRunWithInputtingCoefficients" prefHeight="37.0" prefWidth="275.0" text="Show matrix for input coefficients" wrapText="true">
+                           <font>
+                              <Font size="16.0" />
+                           </font></Button>
+                        <Button fx:id="btn2" layoutX="320.0" layoutY="716.0" mnemonicParsing="false" onAction="#btn2Act" prefHeight="31.0" prefWidth="125.0" text="Get result" />
                      </children>
                   </AnchorPane>
             </content>
@@ -105,4 +105,7 @@
          </GridPane.margin>
       </Label>
    </children>
+   <effect>
+      <DropShadow height="45.88" radius="34.1" spread="0.01" width="92.52" />
+   </effect>
 </GridPane>

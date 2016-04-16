@@ -6,9 +6,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -37,6 +37,8 @@ public class Controller implements Initializable{
 
     @FXML
     public AnchorPane matrixPaneInInputMethod;
+    @FXML
+    public AnchorPane inputMatrix;
 
     @FXML
     private GridPane matrixInputGrid;
@@ -49,10 +51,18 @@ public class Controller implements Initializable{
 
     private Stage mainStage;
 
+
     public void setMainStage(Stage mainStage) {
         this.mainStage = mainStage;
     }
+    Scene mainScene;
 
+    public void getMainScene(Scene mainScene) {
+        this.mainScene = Main.mainScene;
+    }
+
+    Stage inputStage = new Stage();
+    Scene inputScene;
 
     @FXML
     private void initialize(){
@@ -88,34 +98,75 @@ public class Controller implements Initializable{
 
 
 
-    public void btn2Act(ActionEvent event) {
+    public void btn2Act(ActionEvent event) throws IOException {
+        matrixPaneInInputMethod.getChildren().clear();
+        matrixPaneInInputMethod.getChildren().add(new Label("Please " +
+                "input matrix of coefficients(float numbers) in cells" +
+                " Use TAB for movement on the cells."));
+
+        mainStage.show();
 
     }
+
 
     public void btnActionRunWithInputtingCoefficients(ActionEvent event) throws IOException {
 
-        Stage stage;
-        Parent root;
+        matrixPaneInInputMethod.getChildren().clear();
+        mainStage.show();
+       // btnRunWithInputtingCoefficients.setOnAction(e -> ButtonClicked(e));
+        systemSize = Integer.valueOf(inputtingInDialogSystemSizeFieldInInputMethod.getText());
+        Integer systemSizeInNumber = systemSize;
+        List<TextField> matrix = new ArrayList<TextField>();
 
-        if (event.getSource() == btnRunWithInputtingCoefficients) {
-            //get reference to the button's stage
-            stage = (Stage) btnRunWithInputtingCoefficients.getScene().getWindow();
-            //load up OTHER FXML document
-            root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        } else {
-            stage = (Stage) btn2.getScene().getWindow();
-            root = FXMLLoader.load(getClass().getResource("matrixForInputtingCoefficients"));
+        for (int i = 0; i < systemSizeInNumber; i++) {
+            for (int j = 0; j < systemSizeInNumber + 1; j++) {
+                String index = "" + (i+1) + "|" + (j+1);
+                matrix.add(new TextField(index));
+                //System.out.print(index+"_");
+            }
         }
-        //create a new scene with root and set the stage
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+
+        System.out.println("\nAdded cells--" + matrix.size());
+
+        GridPane grid = new GridPane();
+        grid.setVgap(0);
+        grid.setHgap(0);
+        grid.setMaxWidth(700);
+        grid.setMaxHeight(200);
+        Label lblMessage = new Label("Please " +
+                "input matrix of coefficients(float numbers) in cells" +
+                " Use TAB for movement on the cells.");
+        matrixPaneInInputMethod.getChildren().add(lblMessage);
+
+        int k=0;
+        for (int i=1; i < systemSizeInNumber+1; i++) {
+            for (int j = 1; j < (systemSizeInNumber+2); j++) {
+                k=k+1;
+                GridPane.setConstraints(matrix.get(k-1), j, i);
+                grid.getChildren().add(matrix.get(k-1));
+            }
+        }
+        System.out.println("\nPrinted cells--"+k);
+        lblMessage.setLayoutX(500);
+        lblMessage.setLayoutY(580);
+        matrixPaneInInputMethod.getChildren().add(grid);
+        //inputScene = new Scene(root2);
+        //mainStage.setScene(mainScene);
+        //btnscene2.setOnAction(e -> ButtonClicked(e));
+        //add everything to panes
+        //make 2 scenes from 2 panes
+        //inputStage.initModality(Modality.APPLICATION_MODAL);
+        //inputStage.sizeToScene();
+        //inputStage.setY(500);
+        //inputStage.setX(580);
+        //inputStage.setTitle("Please input matrix of coefficients(float numbers) in cells." +
+        //        " Use TAB for movement on the cells.");
+        mainStage.show();
     }
 
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
+    public void ButtonClicked(ActionEvent e) {
+        if (e.getSource() == btnRunWithInputtingCoefficients)
+            inputStage.setScene(inputScene);
     }
 
     private void init2(Stage primaryStage) {
@@ -152,5 +203,10 @@ public class Controller implements Initializable{
             }
         }
         System.out.println("\nPrinted cells--"+k);
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
     }
 }
