@@ -161,7 +161,8 @@ public class Controller implements Initializable{
                     @Override
                     public void handle(KeyEvent ke) {
                         if (ke.getCode().equals(KeyCode.ENTER)) {
-                            //System.out.println(cells+ "|" + equation+ "|1");
+                            //System.out.println(cells+ "|" + equation+ "|132");
+                            int i=0;
                         }
                     }
                 });
