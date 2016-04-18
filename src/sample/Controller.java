@@ -11,6 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -68,7 +70,15 @@ public class Controller implements Initializable{
     Stage inputStage = new Stage();
     Scene inputScene;
 
-    public List<Float> equation;
+    public List list;
+    public ArrayList[] equation;
+
+    @Override
+    public String toString() {
+        return "Controller{" +
+                "equation=" + equation +
+                '}';
+    }
 
     @FXML
     private void initialize(){
@@ -106,10 +116,10 @@ public class Controller implements Initializable{
 
     public void btn2Act(ActionEvent event) throws IOException {
         matrixPaneInInputMethod.getChildren().clear();
-        matrixPaneInInputMethod.getChildren().add(new Label("Please " +
-                "input matrix of coefficients(float numbers) in cells" +
-                " Use TAB for movement on the cells."));
-
+//        matrixPaneInInputMethod.getChildren().add(new Label("Please " +
+//                "input matrix of coefficients(float numbers) in cells" +
+//                " Use TAB for movement on the cells."));
+        matrixPaneInInputMethod.getChildren().add(new Label(equation.toString()));
         mainStage.show();
 
     }
@@ -119,32 +129,45 @@ public class Controller implements Initializable{
         lblInputMatrix.setVisible(true);
         matrixPaneInInputMethod.getChildren().clear();
         mainStage.show();
+        lblInputMatrix.requestFocus();
        // btnRunWithInputtingCoefficients.setOnAction(e -> ButtonClicked(e));
         systemSize = Integer.valueOf(inputtingInDialogSystemSizeFieldInInputMethod.getText());
-        Integer systemSizeInNumber = systemSize;
+        int systemSizeInNumber = systemSize;
+        Float systemSizeInNumberFloat = Float.valueOf(systemSizeInNumber);
         List<TextField> matrix = new ArrayList<TextField>();
-        equation = new ArrayList<Float>();
+        equation = new ArrayList[systemSizeInNumber+1];
 
-        for (int i = 0; i < systemSizeInNumber; i++) {
+        for (int i = 0; i < systemSizeInNumber; i++)
             for (int j = 0; j < systemSizeInNumber + 1; j++) {
-                String index = "" + (i+1) + "|" + (j+1);
+                String index = "" + (i + 1) + "|" + (j + 1);
                 TextField cells = new TextField();
                 cells.setPromptText(index);
                 cells.setId(index);
                 cells.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent e) {
-                        if ((cells.getText() != null && !cells.getText().isEmpty())){
-                            float cellsNumber = Float.valueOf(cells.getText());
-                            equation.add(cellsNumber);
-                            System.out.print(equation.iterator().next()+ "|");
+                        int i=0, j=0;
+                        if ((cells.getText() != null && !cells.getText().isEmpty())) {
+                            String cellsNumber = cells.getText();
+                            //equation[j].add(cellsNumber);
+                            //System.out.print();
+                            System.out.println(i+"," + j + "|" + cellsNumber);
+                        } else {
+
+                        }
+                    }
+                });
+                cells.setOnKeyPressed(new EventHandler<KeyEvent>() {
+                    @Override
+                    public void handle(KeyEvent ke) {
+                        if (ke.getCode().equals(KeyCode.ENTER)) {
+                            //System.out.println(cells+ "|" + equation+ "|");
                         }
                     }
                 });
                 matrix.add(cells);
                 //System.out.print(index+"_");
             }
-        }
 
         System.out.println("\nAdded cells--" + matrix.size());
 
@@ -164,6 +187,7 @@ public class Controller implements Initializable{
         }
         System.out.println("\nPrinted cells--"+k);
         matrixPaneInInputMethod.getChildren().add(grid);
+
         //inputScene = new Scene(root2);
         //mainStage.setScene(mainScene);
         //btnscene2.setOnAction(e -> ButtonClicked(e));
@@ -222,5 +246,9 @@ public class Controller implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+    }
+
+    public void onEnter(ActionEvent event) {
+        btnRunWithInputtingCoefficients.requestFocus();
     }
 }
