@@ -162,7 +162,7 @@ public class Controller implements Initializable{
                     public void handle(KeyEvent ke) {
                         if (ke.getCode().equals(KeyCode.ENTER)) {
                             //System.out.println(cells+ "|" + equation+ "|132");
-                            int i=0;
+                            int d=0;
                         }
                     }
                 });
