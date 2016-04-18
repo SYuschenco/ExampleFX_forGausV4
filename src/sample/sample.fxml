@@ -62,10 +62,15 @@
                            <font>
                               <Font size="16.0" />
                            </font></Button>
-                        <Button fx:id="btn2" layoutX="320.0" layoutY="716.0" mnemonicParsing="false" onAction="#btn2Act" prefHeight="31.0" prefWidth="125.0" text="Get result" />
+                        <Button fx:id="btnGetResult" layoutX="320.0" layoutY="716.0" mnemonicParsing="false" onAction="#getResult" prefHeight="31.0" prefWidth="125.0" text="Get result" />
                         <Label fx:id="lblInputMatrix" layoutX="55.0" layoutY="310.0" prefHeight="40.0" prefWidth="697.0" text="Input matrix of coefficients(float numbers) in cells. Use TAB for movement on the cells." visible="false">
                            <font>
                               <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblCheckInput" layoutX="459.0" layoutY="716.0" prefHeight="32.0" prefWidth="324.0" text="ERROR: Check inputting data in cells!" textAlignment="CENTER" textFill="#ee0404" visible="false">
+                           <font>
+                              <Font size="16.0" />
                            </font>
                         </Label>
                      </children>

@@ -1,12 +1,9 @@
 package sample;
 
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -23,8 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class Controller implements Initializable{
+public class Controller <N extends Number, T extends Gauss<N, T>> implements Initializable {
     static Integer systemSize;
+
+    static int DEFAULT_EQUATIONS_NUMBER;
 
     @FXML
     public Button buttonRunRand;
@@ -33,7 +32,7 @@ public class Controller implements Initializable{
     public Button btnRunWithInputtingCoefficients;
 
     @FXML
-    public Button btn2;
+    public Button btnGetResult;
 
     @FXML
     public Button okButton;
@@ -53,14 +52,23 @@ public class Controller implements Initializable{
     private TextField inputtingInDialogSystemSizeField;
 
     @FXML
+    private TextField inputSizeForRandon;
+
+    @FXML
     private Label lblInputMatrix;
 
+    @FXML
+    private Label lblCheckInput;
+
     private Stage mainStage;
+
+    List<TextField> matrix;
 
 
     public void setMainStage(Stage mainStage) {
         this.mainStage = mainStage;
     }
+
     Scene mainScene;
 
     public void getMainScene(Scene mainScene) {
@@ -70,58 +78,152 @@ public class Controller implements Initializable{
     Stage inputStage = new Stage();
     Scene inputScene;
 
-    public List list;
-    public ArrayList[] equation;
+    public LinearSystem<Float, MyEquation> list;
 
-    @Override
-    public String toString() {
-        return "Controller{" +
-                "equation=" + equation +
-                '}';
-    }
+    public List<Float> equation;
 
     @FXML
-    private void initialize(){
-        inputtingInDialogSystemSizeFieldInInputMethod.getText();
-        System.out.println(inputtingInDialogSystemSizeFieldInInputMethod.getText());
-        inputtingInDialogSystemSizeField.getText();
-        System.out.println(inputtingInDialogSystemSizeField.getText());
-        //systemSize = inputtingInDialogSystemSizeFieldInInputMethod.getText();
-        systemSize = Integer.valueOf(inputtingInDialogSystemSizeFieldInInputMethod.getText());
+    private void initialize() {
     }
 
 
-
-    public void getSystemSizeFromDialogWindow(ActionEvent actionEvent) {
-        Integer inputtingInDialogSystemSizeForMain = Integer.valueOf(inputtingInDialogSystemSizeField.getText());
-        initialize();
-    }
-
-    public void inputtingInDialogSystemSizeFieldInInputMethod(Event event) {
-        Integer inputtingInDialogSystemSizeForMain = Integer.valueOf(inputtingInDialogSystemSizeField.getText());
-        //inputtingInDialogSystemSizeForMain = Integer.parseInt(inputtingInDialogSystemSizeFieldInInputMethod.getText());
-    }
-
-    private void addXZ() {
-
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("sample.fxml"));
-        //Stage seconderyStage = new Stage();
-        matrixInputGrid.autosize();
-        matrixInputGrid.setGridLinesVisible(false);
-    }
+    public void getResult(ActionEvent event) throws IOException {
+        inputCoefficientsInGUI();
+        chekInputCoefficientsInGUI();
 
 
-
-
-    public void btn2Act(ActionEvent event) throws IOException {
-        matrixPaneInInputMethod.getChildren().clear();
-//        matrixPaneInInputMethod.getChildren().add(new Label("Please " +
-//                "input matrix of coefficients(float numbers) in cells" +
-//                " Use TAB for movement on the cells."));
-        matrixPaneInInputMethod.getChildren().add(new Label(equation.toString()));
+        //matrixPaneInInputMethod.getChildren().add(new Label(matrix.toString()));
         mainStage.show();
+    }
 
+    public void general() {
+
+        DEFAULT_EQUATIONS_NUMBER = (Integer.parseInt(String.valueOf(inputtingInDialogSystemSizeFieldInInputMethod)));
+
+        printSystem(list);
+
+        int i, j;
+        Algorithm<Float, MyEquation> alg = new Algorithm<Float, MyEquation>(list);
+        try {
+            alg.calculate();
+        } catch (NullPointerException e) {
+            System.out.println(e.getMessage());
+            System.exit(0);
+        } catch (ArithmeticException e) {
+            System.out.println(e.getMessage());
+            System.exit(0);
+        }
+        Float[] x = new Float[DEFAULT_EQUATIONS_NUMBER];
+        for (i = list.size() - 1; i >= 0; i--) {
+            Float sum = 0.0f;
+            for (j = list.size() - 1; j > i; j--) {
+                sum += list.itemAt(i, j) * x[j];
+            }
+            x[i] = (list.itemAt(i, list.size()) - sum) / list.itemAt(i, j);
+        }
+        printSystem(list);
+        printVector(x);
+    }
+
+    public static LinearSystem<Float, MyEquation> generateSystem(String methodForGeneratingSystemCoefficients) {
+        LinearSystem<Float, MyEquation> list = new LinearSystem<Float, MyEquation>();
+        for (int i = 0; i < DEFAULT_EQUATIONS_NUMBER; i++) {
+            MyEquation eq = new MyEquation();
+            eq.generate(DEFAULT_EQUATIONS_NUMBER + 1, methodForGeneratingSystemCoefficients);
+            list.push(eq);
+        }
+        return list;
+    }
+
+    public static void printSystem(LinearSystem<Float, MyEquation> system) {
+        for (int i = 0; i < system.size(); i++) {
+            MyEquation temp = system.get(i);
+            String s = "";
+            for (int j = 0; j < temp.size(); j++) {
+                s += String.format("%f; %s", system.itemAt(i, j), "\t");
+            }
+            System.out.println(s);
+        }
+        System.out.println("");
+    }
+
+    public static void printVector(Float[] x) {
+        String s = "";
+        for (int i = 0; i < x.length; i++) {
+            s += String.format("x%d = %f; ", i, x[i]);
+        }
+        System.out.println(s);
+    }
+
+
+
+
+    private void chekInputCoefficientsInGUI() {
+        for (TextField textField : matrix) {
+            isDigit(textField.getText());
+            textField.requestFocus();
+//            String tmp = textField.getText();
+//            //tmp.toCharArray();
+//            for (char c : tmp.toCharArray()) {
+//                if ((textField.getText() != null && !textField.getText().isEmpty())) {
+//
+//                    if (Character.isAlphabetic(c)) {
+//                        textField.requestFocus();
+//                        lblCheckInput.setVisible(true);
+//                        //System.out.println("INVALID");
+//                        break;
+//                    } else {
+//                        lblCheckInput.setVisible(false);
+//                    }
+//                }
+//            }
+        }
+    }
+
+    private void isDigit(String s) throws NumberFormatException {
+        try {
+            Double.parseDouble(s);
+
+            lblCheckInput.setVisible(false);
+        } catch (NumberFormatException e) {
+            lblCheckInput.setVisible(true);
+        }
+    }
+
+    private void inputCoefficientsInGUI() {
+        systemSize = Integer.valueOf(inputtingInDialogSystemSizeFieldInInputMethod.getText());
+        int systemSizeInNumber = systemSize;
+        int equationSize = systemSizeInNumber + 1;
+        ArrayList tempArrayCoefficients = new ArrayList();
+        List<Float> equation = new ArrayList<>();
+        List<T> list = new ArrayList<>();
+
+        for (TextField textField : matrix) {
+            tempArrayCoefficients.add(Float.parseFloat(textField.getText()));
+        }
+        System.out.println("tempArrayCoefficients.size()= " + tempArrayCoefficients.size());
+
+        int numberSubArrays = tempArrayCoefficients.size() / (systemSize + 1);
+
+//        System.out.println("numberSubArrays= " + numberSubArrays);
+        int lower = 0;
+        int upper = 0;
+
+        for (int i = 0; i < numberSubArrays; i++) {
+            upper += numberSubArrays + 1;
+            MyEquation eq = new MyEquation();
+            lower = upper;
+            for (int j =0 ; j<equation.size(); j++) {
+                equation.add(tempArrayCoefficients.get(j));
+                list.add(i, equation.get(i));
+            }
+            System.out.println(equation.get(i));
+        }
+//        System.out.println("equation.size() = " + equation.size());
+//        System.out.println("list.size() = " + list.size());
+
+        System.out.println("equation.toString() = " + equation.toString());
+        System.out.println("list.toString() = " + list.toString());
     }
 
 
@@ -129,29 +231,28 @@ public class Controller implements Initializable{
         lblInputMatrix.setVisible(true);
         matrixPaneInInputMethod.getChildren().clear();
         mainStage.show();
-        lblInputMatrix.requestFocus();
-       // btnRunWithInputtingCoefficients.setOnAction(e -> ButtonClicked(e));
         systemSize = Integer.valueOf(inputtingInDialogSystemSizeFieldInInputMethod.getText());
         int systemSizeInNumber = systemSize;
         Float systemSizeInNumberFloat = Float.valueOf(systemSizeInNumber);
-        List<TextField> matrix = new ArrayList<TextField>();
-        equation = new ArrayList[systemSizeInNumber+1];
+        matrix = new ArrayList<TextField>();
 
         for (int i = 0; i < systemSizeInNumber; i++)
             for (int j = 0; j < systemSizeInNumber + 1; j++) {
-                String index = "" + (i + 1) + "|" + (j + 1);
+                String index = "" + (i + 1) + "," + (j + 1);
                 TextField cells = new TextField();
                 cells.setPromptText(index);
                 cells.setId(index);
                 cells.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent e) {
-                        int i=0, j=0;
+                        int j = 0;
                         if ((cells.getText() != null && !cells.getText().isEmpty())) {
                             String cellsNumber = cells.getText();
-                            //equation[j].add(cellsNumber);
+                            //j = (cells.getId());
+                            //equation[0].add(cellsNumber);
                             //System.out.print();
-                            System.out.println(i+"," + j + "|" + cellsNumber);
+                            System.out.println(cells.getId() + "=" + cellsNumber);
+                            j++;
                         } else {
 
                         }
@@ -162,86 +263,34 @@ public class Controller implements Initializable{
                     public void handle(KeyEvent ke) {
                         if (ke.getCode().equals(KeyCode.ENTER)) {
                             //System.out.println(cells+ "|" + equation+ "|132");
-                            int d=0;
+                            int d = 0;
                         }
                     }
                 });
                 matrix.add(cells);
-                //System.out.print(index+"_");
             }
-
-        System.out.println("\nAdded cells--" + matrix.size());
-
         GridPane grid = new GridPane();
         grid.setVgap(0);
         grid.setHgap(0);
         grid.setMaxWidth(700);
         grid.setMaxHeight(200);
 
-        int k=0;
-        for (int i=1; i < systemSizeInNumber+1; i++) {
-            for (int j = 1; j < (systemSizeInNumber+2); j++) {
-                k=k+1;
-                GridPane.setConstraints(matrix.get(k-1), j, i);
-                grid.getChildren().add(matrix.get(k-1));
+        int k = 0;
+        for (int i = 1; i < systemSizeInNumber + 1; i++) {
+            for (int j = 1; j < (systemSizeInNumber + 2); j++) {
+                k = k + 1;
+                GridPane.setConstraints(matrix.get(k - 1), j, i);
+                grid.getChildren().add(matrix.get(k - 1));
             }
         }
-        System.out.println("\nPrinted cells--"+k);
+//        System.out.println("\nPrinted cells--" + k);
         matrixPaneInInputMethod.getChildren().add(grid);
-
-        //inputScene = new Scene(root2);
-        //mainStage.setScene(mainScene);
-        //btnscene2.setOnAction(e -> ButtonClicked(e));
-        //add everything to panes
-        //make 2 scenes from 2 panes
-        //inputStage.initModality(Modality.APPLICATION_MODAL);
-        //inputStage.sizeToScene();
-        //inputStage.setY(500);
-        //inputStage.setX(580);
-        //inputStage.setTitle("Please input matrix of coefficients(float numbers) in cells." +
-        //        " Use TAB for movement on the cells.");
         mainStage.show();
     }
 
     public void ButtonClicked(ActionEvent e) {
         if (e.getSource() == btnRunWithInputtingCoefficients)
             inputStage.setScene(inputScene);
-    }
-
-    private void init2(Stage primaryStage) {
-
-        TextField systemSizeInStringField = new TextField("7");
-        GridPane.setConstraints(systemSizeInStringField,0,0);
-        Integer systemSizeInNumber = Integer.valueOf(systemSizeInStringField.getText());
-        List<TextField> matrix = new ArrayList<TextField>();
-
-        for (int i = 0; i < systemSizeInNumber; i++) {
-            for (int j = 0; j < systemSizeInNumber + 1; j++) {
-                String index = "" + i + j;
-                matrix.add(new TextField(index));
-                System.out.print(index+"_");
-            }
-        }
-
-        System.out.println("\nAdded cells--" + matrix.size());
-
-        Group root2 = new Group();
-        primaryStage.setScene(new Scene(root2));
-        GridPane grid = new GridPane();
-        grid.setVgap(0);
-        grid.setHgap(0);
-        grid.setMaxWidth(700);
-        grid.setMaxHeight(200);
-        root2.getChildren().add(grid);
-        int k=0;
-        for (int i=1; i < systemSizeInNumber+1; i++) {
-            for (int j = 1; j < (systemSizeInNumber+2); j++) {
-                k=k+1;
-                GridPane.setConstraints(matrix.get(k-1), j, i);
-                grid.getChildren().addAll(matrix.get(k-1));
-            }
-        }
-        System.out.println("\nPrinted cells--"+k);
     }
 
     @Override
