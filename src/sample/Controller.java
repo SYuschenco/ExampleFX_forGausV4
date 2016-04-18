@@ -2,6 +2,7 @@ package sample;
 
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -49,6 +50,9 @@ public class Controller implements Initializable{
     @FXML
     private TextField inputtingInDialogSystemSizeField;
 
+    @FXML
+    private Label lblInputMatrix;
+
     private Stage mainStage;
 
 
@@ -63,6 +67,8 @@ public class Controller implements Initializable{
 
     Stage inputStage = new Stage();
     Scene inputScene;
+
+    public List<Float> equation;
 
     @FXML
     private void initialize(){
@@ -110,18 +116,32 @@ public class Controller implements Initializable{
 
 
     public void btnActionRunWithInputtingCoefficients(ActionEvent event) throws IOException {
-
+        lblInputMatrix.setVisible(true);
         matrixPaneInInputMethod.getChildren().clear();
         mainStage.show();
        // btnRunWithInputtingCoefficients.setOnAction(e -> ButtonClicked(e));
         systemSize = Integer.valueOf(inputtingInDialogSystemSizeFieldInInputMethod.getText());
         Integer systemSizeInNumber = systemSize;
         List<TextField> matrix = new ArrayList<TextField>();
+        equation = new ArrayList<Float>();
 
         for (int i = 0; i < systemSizeInNumber; i++) {
             for (int j = 0; j < systemSizeInNumber + 1; j++) {
                 String index = "" + (i+1) + "|" + (j+1);
-                matrix.add(new TextField(index));
+                TextField cells = new TextField();
+                cells.setPromptText(index);
+                cells.setId(index);
+                cells.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent e) {
+                        if ((cells.getText() != null && !cells.getText().isEmpty())){
+                            float cellsNumber = Float.valueOf(cells.getText());
+                            equation.add(cellsNumber);
+                            System.out.print(equation.iterator().next()+ "|");
+                        }
+                    }
+                });
+                matrix.add(cells);
                 //System.out.print(index+"_");
             }
         }
@@ -133,10 +153,6 @@ public class Controller implements Initializable{
         grid.setHgap(0);
         grid.setMaxWidth(700);
         grid.setMaxHeight(200);
-        Label lblMessage = new Label("Please " +
-                "input matrix of coefficients(float numbers) in cells" +
-                " Use TAB for movement on the cells.");
-        matrixPaneInInputMethod.getChildren().add(lblMessage);
 
         int k=0;
         for (int i=1; i < systemSizeInNumber+1; i++) {
@@ -147,8 +163,6 @@ public class Controller implements Initializable{
             }
         }
         System.out.println("\nPrinted cells--"+k);
-        lblMessage.setLayoutX(500);
-        lblMessage.setLayoutY(580);
         matrixPaneInInputMethod.getChildren().add(grid);
         //inputScene = new Scene(root2);
         //mainStage.setScene(mainScene);

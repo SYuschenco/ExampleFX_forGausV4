@@ -39,23 +39,35 @@
                               <Font name="System Bold Italic" size="18.0" />
                            </font>
                         </Label>
-                        <Label layoutX="55.0" layoutY="266.0" prefHeight="27.0" prefWidth="331.0" text="Input number of equations and variables:">
+                        <Label layoutX="93.0" layoutY="270.0" prefHeight="27.0" prefWidth="241.0" text="Input number of equations :">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="inputtingInDialogSystemSizeFieldInInputMethod" layoutX="401.0" layoutY="265.0" prefHeight="30.0" prefWidth="61.0" />
+                        <TextField fx:id="inputtingInDialogSystemSizeFieldInInputMethod" layoutX="334.0" layoutY="265.0" prefHeight="30.0" prefWidth="61.0">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </TextField>
                         <ImageView fitHeight="150.0" fitWidth="785.0" layoutX="93.0" layoutY="106.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@LAE.jpg" />
                            </image>
                         </ImageView>
-                        <AnchorPane fx:id="matrixPaneInInputMethod" layoutX="9.0" layoutY="344.0" prefHeight="372.0" prefWidth="782.0" AnchorPane.bottomAnchor="45.0" AnchorPane.topAnchor="344.0" />
-                        <Button fx:id="btnRunWithInputtingCoefficients" cancelButton="true" defaultButton="true" layoutX="476.0" layoutY="264.0" mnemonicParsing="false" onAction="#btnActionRunWithInputtingCoefficients" prefHeight="37.0" prefWidth="275.0" text="Show matrix for input coefficients" wrapText="true">
+                        <AnchorPane fx:id="matrixPaneInInputMethod" layoutX="9.0" layoutY="349.0" prefHeight="367.0" prefWidth="782.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="349.0">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding></AnchorPane>
+                        <Button fx:id="btnRunWithInputtingCoefficients" cancelButton="true" defaultButton="true" layoutX="404.0" layoutY="265.0" mnemonicParsing="false" onAction="#btnActionRunWithInputtingCoefficients" prefHeight="37.0" prefWidth="275.0" text="Show matrix for input coefficients" wrapText="true">
                            <font>
                               <Font size="16.0" />
                            </font></Button>
                         <Button fx:id="btn2" layoutX="320.0" layoutY="716.0" mnemonicParsing="false" onAction="#btn2Act" prefHeight="31.0" prefWidth="125.0" text="Get result" />
+                        <Label fx:id="lblInputMatrix" layoutX="55.0" layoutY="310.0" prefHeight="40.0" prefWidth="697.0" text="Input matrix of coefficients(float numbers) in cells. Use TAB for movement on the cells." visible="false">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
                      </children>
                   </AnchorPane>
             </content>
@@ -64,17 +76,6 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="buttonRunRand" layoutX="477.0" layoutY="264.0" mnemonicParsing="false" onAction="#getSystemSizeFromDialogWindow" prefHeight="31.0" prefWidth="225.0" text="Run with random coefficients" />
-                        <Label layoutX="54.0" layoutY="266.0" prefHeight="27.0" prefWidth="331.0" text="Input number of equations and variables:">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                        <TextField fx:id="inputtingInDialogSystemSizeField" layoutX="400.0" layoutY="265.0" prefHeight="22.0" prefWidth="65.0">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </TextField>
                         <ImageView fitHeight="97.0" fitWidth="800.0" layoutX="8.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@jv0h.jpg" />
@@ -90,6 +91,21 @@
                               <Image url="@LAE.jpg" />
                            </image>
                         </ImageView>
+                        <Button fx:id="btnRunWithInputtingCoefficients1" cancelButton="true" defaultButton="true" layoutX="404.0" layoutY="265.0" mnemonicParsing="false" onAction="#btnActionRunWithInputtingCoefficients" prefHeight="37.0" prefWidth="275.0" text="Show matrix for input coefficients" wrapText="true">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Button>
+                        <TextField fx:id="inputtingInDialogSystemSizeFieldInInputMethod1" layoutX="334.0" layoutY="265.0" prefHeight="30.0" prefWidth="61.0">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </TextField>
+                        <Label layoutX="93.0" layoutY="270.0" prefHeight="27.0" prefWidth="241.0" text="Input number of equations :">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
                      </children>
                   </AnchorPane>
             </content>
